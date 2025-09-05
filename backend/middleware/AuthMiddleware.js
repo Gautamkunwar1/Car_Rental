@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import User from "../models/User";
+import User from "../models/User.js";
 export const protect = async(req,res,next)=>{
     const token = req.headers.authorization;
     if(!token) return res.status(400).json({success:false,message:"Not authorized"});

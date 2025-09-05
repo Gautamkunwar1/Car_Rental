@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import cors from "cors";
 import connectDb from "./config/db.js"
 import userRouter from "./routes/userRouter.js";
+import adminRouter from "./routes/adminRoutes.js";
 
 dotenv.config();
 const app = express()
@@ -14,7 +15,8 @@ app.use(express.json());
 app.get('/',(req,res)=>{
     res.send("Server is running")
 });
-app.use('/api/user',userRouter)
+app.use('/api/user',userRouter);
+app.use('/api/admin',adminRouter)
 app.listen(PORT,async()=>{
     try {
         console.log(`Server is running at ${PORT}`)
