@@ -1,9 +1,16 @@
-import React from 'react'
 import AdminNavbar from '../../components/Admin/AdminNavbar'
 import Sidebar from "../../components/Admin/Sidebar"
 import { Outlet } from 'react-router-dom'
+import { useAppContext } from '../../context/AppContext'
+import { useEffect } from 'react'
 
 const Layout = () => {
+    const {isOwner,navigate} = useAppContext();
+    useEffect(()=>{
+        if(!isOwner){
+            navigate('/')
+        }
+    },[isOwner])
     return (
         <div className='flex flex-col'>
             <AdminNavbar/>
