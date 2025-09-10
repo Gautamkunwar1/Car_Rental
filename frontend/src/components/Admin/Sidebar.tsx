@@ -9,12 +9,13 @@ const Sidebar: React.FC = () => {
     const location = useLocation();
     const [image, setImage] = useState<File | null>(null);
 
-    const updateImage = async () => {
+    const updateImage = async (): Promise<void> => {
         if (!image) return;
 
         try {
             const formData = new FormData();
             formData.append("image", image);
+
             const { data } = await axios.post("/api/admin/update-image", formData);
 
             if (data.success) {
@@ -24,15 +25,18 @@ const Sidebar: React.FC = () => {
             } else {
                 toast.error(data.message);
             }
-        } catch (error: any) {
-            toast.error(error.message || "An error occurred");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else {
+                toast.error("An unknown error occurred");
+            }
         }
     };
 
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setImage(e.target.files[0]);
-        }
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        const file = e.target.files?.[0];
+        if (file) setImage(file);
     };
 
     return (
@@ -75,18 +79,14 @@ const Sidebar: React.FC = () => {
                     <NavLink
                         key={index}
                         to={link.path}
-                        className={`relative flex items-center gap-2 w-full py-3 pl-4 first:mt-6 ${link.path === location.pathname ? "bg-primary/10 text-primary" : "text-gray-600"
-                            }`}
+                        className={`relative flex items-center gap-2 w-full py-3 pl-4 first:mt-6 ${link.path === location.pathname ? "bg-primary/10 text-primary" : "text-gray-600"}`}
                     >
                         <img
                             src={link.path === location.pathname ? link.coloredIcon! : link.icon!}
                             alt={`${link.name} icon`}
                         />
                         <span className="max-md:hidden">{link.name}</span>
-                        <div
-                            className={`${link.path === location.pathname ? "bg-primary" : ""
-                                } w-1.5 h-8 rounded-l right-0 absolute`}
-                        />
+                        <div className={`${link.path === location.pathname ? "bg-primary" : ""} w-1.5 h-8 rounded-l right-0 absolute`} />
                     </NavLink>
                 ))}
             </div>

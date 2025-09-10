@@ -7,18 +7,34 @@ import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import {motion} from "motion/react"
 
-const Cars = () => {
+interface Car {
+  brand: string;
+  model: string;
+  category: string;
+  transmission: string;
+  year: number;
+  pricePerDay: number;
+  fuel_type: string;
+  seating_capacity: number;
+  location: string;
+  description: string;
+}
 
-  // Getting search params from url
+interface AppContextTypes {
+  cars: any[];
+  axios: any; 
+}
+
+const Cars = () => {
   const [searchParams] = useSearchParams();
   const pickupLocation = searchParams.get('pickupLocation')
   const pickupDate = searchParams.get('pickupDate')
   const returnDate = searchParams.get('returnDate')
 
-  const {cars,axios} = useAppContext();
+  const {cars,axios}:AppContextTypes = useAppContext();
   const isSearchData = pickupLocation && pickupDate && returnDate;
 
-  const [filteredCars,setFilteredCars] = useState([]);
+  const [filteredCars,setFilteredCars] = useState<Car[]>([]);
   const [input,setInput] = useState('');
 
   const applyFilter = async ()=>{
@@ -26,10 +42,11 @@ const Cars = () => {
       setFilteredCars(cars);
       return null;
     }
-    const filtered = cars.slice().filter((car)=>{
+    const filtered = cars.filter((car)=>{
       return car.brand.toLowerCase().includes(input.toLowerCase())
-      || car.model.toLowerCase().includes(input.toLowerCase())||car.category.toLowerCase().includes(input.toLowerCase())
-      || car.transmission.toLowerCase().includes(input.toLowerCase());
+        || car.model.toLowerCase().includes(input.toLowerCase())
+        || car.category.toLowerCase().includes(input.toLowerCase())
+        || car.transmission.toLowerCase().includes(input.toLowerCase());
     })
     setFilteredCars(filtered);
   }
@@ -37,21 +54,22 @@ const Cars = () => {
   const searchCarAvailability = async()=>{
     const {data} = await axios.post('/api/bookings/check-availability',
       {location:pickupLocation,pickupDate,returnDate})
-      if(data.success){
-        setFilteredCars(data.availableCars);
-        if(data.availableCars.length === 0){
-          toast('No cars available')
-        }
-        return null;
+    if(data.success){
+      setFilteredCars(data.availableCars);
+      if(data.availableCars.length === 0){
+        toast('No cars available')
       }
+      return null;
+    }
   }
   useEffect(()=>{
-    isSearchData && searchCarAvailability()
+    if(isSearchData) searchCarAvailability()
   },[]);
 
   useEffect(()=>{
-    cars.length > 0 && !isSearchData && applyFilter()
+    if(cars.length > 0 && !isSearchData) applyFilter()
   },[input,cars])
+
   return (
     <div>
       <motion.div initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={{duration:0.6,ease:"easeOut"}} className="flex flex-col items-center py-20 bg-light max-md:px-4">
@@ -60,7 +78,6 @@ const Cars = () => {
           <img src={assets.search_icon} alt="" className="w-4.5 h-4.5 mr-2"/>
           <input  type="text" placeholder="Search by make, model, or features" className="w-full h-full outline-none text-gray-500" onChange={(e)=>setInput(e.target.value)} value={input}/>
           <img src={assets.filter_icon} alt="" className="w-4.5 h-4.5 ml-2"/>
-          
         </motion.div>
       </motion.div>
 

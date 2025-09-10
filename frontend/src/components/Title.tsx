@@ -2,7 +2,7 @@
 export interface propsType{
     title:string;
     subTitle:string,
-    align:string
+    align?:string
 }
 const Title = ({title,subTitle,align}:propsType) => {
     return (

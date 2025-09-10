@@ -75,7 +75,7 @@ const ManageBooking = () => {
                     </thead>
 
                     <tbody>
-                        {bookings.map((booking, index) => (
+                        {bookings.map((booking) => (
                             <tr
                                 key={booking._id}
                                 className="border-t border-borderColor text-gray-500"

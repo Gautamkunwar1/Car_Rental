@@ -3,11 +3,12 @@ import {assets} from "../assets/assets"
 import CarCard from "./CarCard";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import {motion} from "motion/react"
+import {motion} from "motion/react";
+import type { Car } from "../pages/Admin/AddCar";
 
 const FeaturedSection = () => {
     const navigate = useNavigate();
-    const {cars} = useAppContext();
+    const { cars } = useAppContext() as unknown as { cars: Car[] };
     return (
         <motion.div initial={{opacity:0,y:40}} whileInView={{opacity:1,y:0}} transition={{duration:1,ease:"easeOut"}}
         className="flex flex-col items-center py-24 px-26 md:px-16 lg:px-24 xl:px-32">

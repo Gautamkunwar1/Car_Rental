@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom"
-import {assets} from "../assets/assets"
-const CarCard = ({car}) => {
+import {assets} from "../assets/assets";
+import type{ Car } from "../pages/Admin/AddCar";
+
+interface CarCardProps{
+    car:Car;
+}
+const CarCard:React.FC<CarCardProps> = ({car}) => {
     const navigate = useNavigate()
     return (
         <div className="group rounded-xl overflow-hidden shadow-lg cursor-pointer hover:-translate-y-1 transition-all duration-500" onClick={()=>{navigate(`/car-details/${car._id}`);scrollTo(0,0)}}>
@@ -22,7 +27,7 @@ const CarCard = ({car}) => {
                 <div className="mt-4 grid grid-cols-2 gap-y-2 text-gray-600">
                 <div className="flex items-center text-sm tet-muted-foreground">
                     <img src={assets.users_icon} alt=""  className="h-4 mr-2"/>
-                    <span>{car.seats} Seats</span>
+                    <span>{car.seating_capacity} Seats</span>
                 </div>
                 <div className="flex items-center text-sm tet-muted-foreground">
                     <img src={assets.fuel_icon} alt=""  className="h-4 mr-2"/>

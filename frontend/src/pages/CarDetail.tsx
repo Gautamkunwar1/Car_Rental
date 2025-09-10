@@ -6,13 +6,14 @@ import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import type { Car } from "./Admin/AddCar";
 import { motion } from "motion/react";
+
 const CarDetail = () => {
   const { id } = useParams();
   const {cars,axios,pickupDate,setPickupDate,returnDate,setReturnDate} = useAppContext();
   const navigate = useNavigate();
-  const [car, setCar] = useState<Car>(null);
+  const [car, setCar] = useState<Car|null>(null);
 
-  const handleSubmit = async(e:React.ChangeEvent)=>{
+  const handleSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     try {
       const {data}=await axios.post('/api/bookings/create',{
@@ -32,7 +33,7 @@ const CarDetail = () => {
   }
 
   useEffect(() => {
-    setCar(cars.find(car => car._id === id));
+    setCar(cars.find(car => car._id === id) ?? null as any);
   }, [cars,id]);
   return car ? (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">

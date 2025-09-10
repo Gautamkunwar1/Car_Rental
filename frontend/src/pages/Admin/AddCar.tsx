@@ -5,6 +5,7 @@ import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
 
 export interface Car {
+    _id?: string;
     brand: string;
     model: string;
     year: number;
@@ -15,11 +16,14 @@ export interface Car {
     seating_capacity: number;
     location: string;
     description: string;
+    image?: string;
+    isAvailable?: boolean;
 }
 
 const AddCar: React.FC = () => {
     const { axios } = useAppContext();
     const [image, setImage] = useState<File | null>(null);
+
     const [car, setCar] = useState<Car>({
         brand: "",
         model: "",
@@ -30,7 +34,9 @@ const AddCar: React.FC = () => {
         fuel_type: "",
         seating_capacity: 0,
         location: "",
-        description: ""
+        description: "",
+        image: "",
+        isAvailable: true
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -39,17 +45,20 @@ const AddCar: React.FC = () => {
         e.preventDefault();
         if (isLoading) return;
         setIsLoading(true);
+
         try {
             if (!image) {
                 toast.error("Please upload an image.");
                 setIsLoading(false);
                 return;
             }
+
             const formData = new FormData();
             formData.append('image', image);
             formData.append('carData', JSON.stringify(car));
 
             const { data } = await axios.post('/api/admin/add-car', formData);
+
             if (data.success) {
                 toast.success(data.message);
                 setImage(null);
@@ -63,7 +72,9 @@ const AddCar: React.FC = () => {
                     fuel_type: "",
                     seating_capacity: 0,
                     location: "",
-                    description: ""
+                    description: "",
+                    image: "",
+                    isAvailable: true
                 });
             } else {
                 toast.error(data.message);
@@ -77,13 +88,20 @@ const AddCar: React.FC = () => {
 
     return (
         <div className='px-4 py-10 md:px-10 flex-1'>
-            <Title title='Add New Car' subTitle='Fill in details to list a new car for booking, including pricing, availability, and car specifications' />
+            <Title
+                title='Add New Car'
+                subTitle='Fill in details to list a new car for booking, including pricing, availability, and car specifications'
+            />
 
             <form onSubmit={onSubmitHandler} className='flex flex-col gap-5 text-gray-500 text-sm mt-6 max-w-xl'>
 
                 <div className='flex items-center gap-2 w-full'>
                     <label htmlFor="car-image" className="cursor-pointer">
-                        <img src={image ? URL.createObjectURL(image) : assets.upload_icon} alt="" className='h-14 rounded' />
+                        <img
+                            src={image ? URL.createObjectURL(image) : assets.upload_icon}
+                            alt=""
+                            className='h-14 rounded'
+                        />
                         <input
                             type="file"
                             name="car-image"
@@ -110,6 +128,7 @@ const AddCar: React.FC = () => {
                             onChange={e => setCar({ ...car, brand: e.target.value })}
                         />
                     </div>
+
                     <div className='flex flex-col w-full'>
                         <label> Model</label>
                         <input
@@ -216,7 +235,7 @@ const AddCar: React.FC = () => {
                     >
                         <option value="">Select a Location</option>
                         <option value="New York">New York</option>
-                        <option value="Los Angles">Los Angles</option>
+                        <option value="Los Angeles">Los Angeles</option>
                         <option value="Houston">Houston</option>
                         <option value="Chicago">Chicago</option>
                     </select>

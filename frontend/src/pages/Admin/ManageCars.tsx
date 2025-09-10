@@ -7,7 +7,7 @@ import type { Car } from "./AddCar"
 
 const ManageCars = () => {
     const {isOwner,axios} = useAppContext();
-    const [cars,setCars] =  useState<Car>([]);
+    const [cars,setCars] =  useState<Car[]>([]);
 
     const fetchOwnerCars = async()=>{
         try {
@@ -74,8 +74,8 @@ const ManageCars = () => {
                     </thead>
 
                     <tbody>
-                        {cars.map((car,index)=>(
-                            <tr key={index} className="border-t border-borderColor">
+                        {cars.map((car)=>(
+                            <tr key={car._id ?? car.brand + car.model} className="border-t border-borderColor">
                                 <td className="p-3 flex items-center gap-3">
                                     <img src={car.image} alt="" className="h-12 w-12 aspect-square rounded-md object-cover" />
                                     <div className="max-md:hidden">
@@ -87,14 +87,14 @@ const ManageCars = () => {
                                 <td className="p-3 max-md:hidden">{car.category}</td>
                                 <td className="p-3 ">${car.pricePerDay}</td>
                                 <td className="p-3 max-md:hidden">
-                                    <span className={`px-3 py-1 rounded-full text-xs ${car.isAvaliable?'bg-green-100 text-green-500':'bg-red-100 text-red-500'}`}>
-                                        {car.isAvaliable ? "Available":"Unavailable"}
+                                    <span className={`px-3 py-1 rounded-full text-xs ${car.isAvailable?'bg-green-100 text-green-500':'bg-red-100 text-red-500'}`}>
+                                        {car.isAvailable ? "Available":"Unavailable"}
                                     </span>
                                 </td>
 
                                 <td className="flex items-center p-3">
-                                    <img src={car.isAvaliable ? assets.eye_close_icon : assets.eye_icon} alt="" className="cursor-pointer" onClick={()=>toggleAvailability(car._id)}/>
-                                    <img src={assets.delete_icon} alt="" className="cursor-pointer" onClick={()=>deleteCar(car._id)}/>
+                                    <img src={car.isAvailable ? assets.eye_close_icon : assets.eye_icon} alt="" className="cursor-pointer" onClick={()=>toggleAvailability(car._id!)}/>
+                                    <img src={assets.delete_icon} alt="" className="cursor-pointer" onClick={()=>deleteCar(car._id!)}/>
                                 </td>
                             </tr>
                         ))}

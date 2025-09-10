@@ -3,11 +3,30 @@ import { assets } from "../assets/assets"
 import Title from "../components/Title";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
-import {motion} from "motion/react"
+import {motion} from "motion/react";
+
+interface Booking {
+  _id: string;
+  car: {
+    image: string;
+    brand: string;
+    model: string;
+    year: number;
+    category: string;
+    location: string;
+  };
+  status: string;
+  pickupDate: string;
+  returnDate: string;
+  price: number;
+  createdAt: string;
+}
+
+
 const MyBookings = () => {
 
   const { axios, user } = useAppContext();
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const fetchMyBookings = async () => {
     try {
       const {data} = await axios.get('/api/bookings/user');

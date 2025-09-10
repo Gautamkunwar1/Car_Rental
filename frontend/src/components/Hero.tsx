@@ -6,7 +6,7 @@ import {motion} from "motion/react";
 const Hero: React.FC = () => {
     const [pickupLocation, setPickupLocation] = useState<string>("");
     const {pickupDate,setPickupDate,returnDate,setReturnDate,navigate} = useAppContext();
-    const handleSearch = (e)=>{
+    const handleSearch = (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         navigate('/cars?pickupLocation=' + pickupLocation + '&pickupDate=' + pickupDate + '&returnDate=' + returnDate)
     }

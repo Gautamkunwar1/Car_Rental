@@ -10,7 +10,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const onSubmitHandler = async(e)=>{
+    const onSubmitHandler = async(e:React.FormEvent<HTMLFormElement>)=>{
         try {
             e.preventDefault();
             const {data} = await axios.post(`/api/user/${state}`,{name,email,password})
@@ -22,8 +22,12 @@ const Login = () => {
             }else{
                 toast.error(data.message)
             }
-        } catch (error) {
-            toast.error(error.message)
+        } catch (error:unknown) {
+            if(error instanceof Error){
+                toast.error(error.message)
+            }else{
+                toast.error("An unexpected error occurred")
+            }
         }
         
     }
